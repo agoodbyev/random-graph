@@ -23,7 +23,7 @@ double product(vector<double> v, int k=0){
     return p;
 }
 
-double UB=1,LB=0,upper,lower;
+double UB=1, LB=0, upper, lower;
 int counter=0,st_time;
 
 class RandomGraph
@@ -31,9 +31,9 @@ class RandomGraph
     public:
     int dimension;
     int edgesNumber;
-    vector<int>degree;
+    vector<int> degree;
     double currentReliability;
-    vector<double>multipliers;
+    vector<double> multipliers;
 
     class Edge{
         public:
@@ -68,9 +68,9 @@ class RandomGraph
     }
 
     RandomGraph(const RandomGraph& orig){
-        dimension=orig.dimension;
-        edgesNumber=orig.edgesNumber;
-        currentReliability=orig.currentReliability;
+        dimension = orig.dimension;
+        edgesNumber = orig.edgesNumber;
+        currentReliability = orig.currentReliability;
         for(int i=0;i<dimension;i++) degree.push_back(orig.degree[i]);
         for(int i=0;i<edgesNumber;i++) edges.push_back(orig.edges[i]);
     }
@@ -78,10 +78,10 @@ class RandomGraph
     RandomGraph(int n, int m){
         int a,b;
         double r;
-        dimension=n;
-        edgesNumber=m;
+        dimension = n;
+        edgesNumber = m;
         cout << "Creating graph(" << n << "," << m << ")" << endl;
-        cout << "Insert edges by numbers of vertexes and reliabilities: " << endl;
+        cout << "Insert edges by numbers of two connected vertices and reliability: " << endl;
         for(int i=0;i<n;i++) degree.push_back(0);
         for(int i=0;i<m;i++){
             cout << i+1 << ") ";
@@ -93,7 +93,7 @@ class RandomGraph
     }
 
     RandomGraph(int a,vector<vector<double> >m){
-        dimension=a;
+        dimension = a;
         for(int i=0;i<dimension;i++){degree.push_back(0);}
         int k=0;
         for(int i=0;i<dimension;i++){
@@ -110,25 +110,25 @@ class RandomGraph
     }
 
     ~RandomGraph(){
-        dimension=0;
-        edgesNumber=0;
-        currentReliability=0;
+        dimension = 0;
+        edgesNumber = 0;
+        currentReliability = 0;
         degree.clear();
         edges.clear();
         multipliers.clear();
     }
 
     void deleteGraph(){
-        dimension=0;
-        edgesNumber=0;
+        dimension = 0;
+        edgesNumber = 0;
         degree.clear();
         edges.clear();
         multipliers.clear();
     }
 
     RandomGraph& operator=(const RandomGraph& orig){
-        dimension=orig.dimension;
-        edgesNumber=orig.edgesNumber;
+        dimension = orig.dimension;
+        edgesNumber = orig.edgesNumber;
         for(int i=0;i<dimension;i++) degree.push_back(orig.degree[i]);
         for(int i=0;i<edgesNumber;i++) edges.push_back(orig.edges[i]);
         return *this;
@@ -172,18 +172,18 @@ class RandomGraph
             return 0;
         }
         srand ( time(NULL) );
-        dimension=v;
-        edgesNumber=e;
+        dimension = v;
+        edgesNumber = e;
         for(int i=0;i<dimension;i++) degree.push_back(0);
-        int r,s;
+        int r, s;
         int flag;
-        vector<int>a(v);
+        vector<int> a(v);
         for(int i=0;i<v;i++) a[i]=i;
         swap(a[rand()%v],a[v-1]);
-        flag=v-1;
+        flag = v-1;
         while(flag!=0){
-            r=rand()%flag;
-            s=flag+rand()%(v-flag);
+            r = rand()%flag;
+            s = flag+rand()%(v-flag);
             degree[a[r]]++;
             degree[a[s]]++;
             if(p==-1) edges.push_back(Edge(a[r],a[s],(double)(rand())/RAND_MAX/2+0.5));
@@ -209,14 +209,14 @@ class RandomGraph
                 degree[s]++;
                 e--;
             }
-            flag=0;
+            flag = 0;
         }
         return 1;
     }
 
     int createGridGraph(int a, int b,double p=-1){
         srand ( time(NULL) );
-        dimension=a*b;
+        dimension = a*b;
         for(int i=0;i<dimension;i++) degree.push_back(0);
         for(int j=0;j<b;j++){
             for(int i=0;i<a-1;i++){
@@ -251,8 +251,8 @@ class RandomGraph
         }
     }
 
-    void eliminateLists(int logs=-1){
-        int s=0,jsave=0,flag=1;
+    void eliminateLeafs(int logs=-1){
+        int s = 0, jsave = 0,flag = 1;
 
         while(flag==1){
             for(int i=dimension-1;i>=0;i--){
@@ -288,9 +288,9 @@ class RandomGraph
     }
 
     void eliminateIsolated(int logs=-1){
-        int flag=1;
+        int flag = 1;
         while(flag==1){
-            flag=0;
+            flag = 0;
             for(int i=0;i<dimension;i++){
                     if(degree[i]==0) {
                         swapVertices(i,dimension-1);
@@ -318,7 +318,7 @@ class RandomGraph
     }
 
     void contractVertices(int a, int b){
-        int flag=0;
+        int flag = 0;
         eliminateEdge(a,b);
         for(int i=0;i<edgesNumber;i++){
             if(edges[i].in==b){
@@ -365,7 +365,7 @@ class RandomGraph
     }
 
     double eliminateEdge(int a,int b){
-        double buff=0;
+        double buff = 0;
         for(int i=0;i<edgesNumber;i++){
             if(((edges[i].in==a)&&(edges[i].out==b))||((edges[i].in==b)&&(edges[i].out==a))){
                 buff=edges[i].reliability;
@@ -379,12 +379,12 @@ class RandomGraph
         return buff;
     }
 
-    void eliminateChains(int logs=-1, double pr=0){
+    void eliminateChains(int logs = -1, double pr = 0){
 
-        vector<int>chain1;
-        vector<int>chain2;
-        int s,psave=0,isCycle=0,flag=1,exist=0;
-        double summ=0,buff,mult=1;
+        vector<int> chain1;
+        vector<int> chain2;
+        int s, psave = 0, isCycle = 0, flag = 1, exist = 0;
+        double summ = 0, buff, mult = 1;
 
         while(flag==1){
             flag=0;
@@ -493,14 +493,14 @@ class RandomGraph
             }
         //подсчет веро€тности ребра, замен€ющего цепь
             if((isCycle==0)&&(chain2.size()>0)){
-                summ=0;
-                mult=1;
+                summ = 0;
+                mult = 1;
                 for(unsigned int j=1;j<chain2.size();j++){
                     buff=eliminateEdge(chain2[j-1],chain2[j]);
                     summ+=1.0/buff;
                     mult*=buff;
                 }
-                summ=summ-chain2.size()+2;
+                summ = summ-chain2.size()+2;
 
                 UB-=pr*(1-mult*summ);
                 pr*=mult*summ;
@@ -545,11 +545,11 @@ class RandomGraph
                 if((int)chain2.size()==dimension) flag=-1;
             }
             chain2.clear();
-            isCycle=0;
-            summ=0;
-            exist=0;
+            isCycle = 0;
+            summ = 0;
+            exist = 0;
             eliminateIsolated();
-            eliminateLists();
+            eliminateLeafs();
             for(int i=0;i<dimension;i++)  if((degree[i]==2)&&(flag!=-1)) flag=1;
         }
     }
@@ -560,7 +560,7 @@ class RandomGraph
 
         if(dimension==5) return product(multipliers)*fc5();
         if(dimension==4) return product(multipliers)*fc4();
-        eliminateLists();
+        eliminateLeafs();
         if(dimension==5) return product(multipliers)*fc5();
         if(dimension==4) return product(multipliers)*fc4();
         if((dimension<2)||(edgesNumber==0)) return product(multipliers);
@@ -621,7 +621,7 @@ class RandomGraph
             G1.contractVertices(v,v2);
             G1.contractVertices(v,v3);
             G1.eliminateIsolated();
-            G1.eliminateLists();
+            G1.eliminateLeafs();
             G1.eliminateChains();
             if(G1.dimension==5) G1.multipliers.push_back(G1.fc5());
             else if(G1.dimension==4) G1.multipliers.push_back(G1.fc4());
@@ -641,7 +641,7 @@ class RandomGraph
             G2.contractVertices(v,v2);
             G2.eliminateIsolated();
             if(G2.isConnected()==1){
-                G2.eliminateLists();
+                G2.eliminateLeafs();
                 G2.eliminateChains();
                 if(G2.dimension==5) G2.multipliers.push_back(G2.fc5());
                 else if(G2.dimension==4) G2.multipliers.push_back(G2.fc4());
@@ -663,7 +663,7 @@ class RandomGraph
             G3.contractVertices(v,v3);
             G3.eliminateIsolated();
             if(G3.isConnected()==1){
-                G3.eliminateLists();
+                G3.eliminateLeafs();
                 G3.eliminateChains();
                 if(G3.dimension==5) G3.multipliers.push_back(G3.fc5());
                 else if(G3.dimension==4) G3.multipliers.push_back(G3.fc4());
@@ -685,7 +685,7 @@ class RandomGraph
             G4.contractVertices(v,v3);
             G4.eliminateIsolated();
             if(G4.isConnected()==1){
-                G4.eliminateLists();
+                G4.eliminateLeafs();
                 G4.eliminateChains();
                 if(G4.dimension==5) G4.multipliers.push_back(G4.fc5());
                 else if(G4.dimension==4) G4.multipliers.push_back(G4.fc4());
@@ -707,7 +707,7 @@ class RandomGraph
             G5.eliminateEdge(v,v3);
             G5.eliminateIsolated();
             if(G5.isConnected()==1){
-                G5.eliminateLists();
+                G5.eliminateLeafs();
                 G5.eliminateChains();
                 if(G5.dimension==5) G5.multipliers.push_back(G5.fc5());
                 else if(G5.dimension==4) G5.multipliers.push_back(G5.fc4());
@@ -920,7 +920,7 @@ class RandomGraph
         if(counter==10000) cout << "under 10000 iterations: " << endl << "UB " << UB << endl << "LB " << LB << " time " << (long double)(clock()-st_time)/CLK_TCK << endl;
         if(level==0){
             multipliers.clear();
-            eliminateLists();
+            eliminateLeafs();
             eliminateChains(-1,product(multipliers));
             currentReliability=product(multipliers);
             UB=currentReliability;
@@ -940,7 +940,7 @@ class RandomGraph
         }
         else{
             multipliers.clear();
-            eliminateLists();
+            eliminateLeafs();
             UB-=currentReliability*(1-product(multipliers));
             currentReliability*=product(multipliers);
             multipliers.clear();
@@ -1012,7 +1012,7 @@ class RandomGraph
             G1.contractVertices(v,v3);
             G1.eliminateIsolated();
             G1.currentReliability*=p1*p2*p3;
-            G1.eliminateLists();
+            G1.eliminateLeafs();
             UB-=G1.currentReliability*(1-product(G1.multipliers));
             G1.currentReliability*=product(G1.multipliers);
             G1.multipliers.clear();
@@ -1053,7 +1053,7 @@ class RandomGraph
             G2.eliminateIsolated();
             G2.currentReliability*=p1*p2*(1-p3);
             if(G2.isConnected()==1){
-                G2.eliminateLists();
+                G2.eliminateLeafs();
                 UB-=G2.currentReliability*(1-product(G2.multipliers));
                 G2.currentReliability*=product(G2.multipliers);
                 G2.multipliers.clear();
@@ -1096,7 +1096,7 @@ class RandomGraph
             G3.eliminateIsolated();
             G3.currentReliability*=p1*(1-p2)*p3;
             if(G3.isConnected()==1){
-                G3.eliminateLists();
+                G3.eliminateLeafs();
                 UB-=G3.currentReliability*(1-product(G3.multipliers));
                 G3.currentReliability*=product(G3.multipliers);
                 G3.multipliers.clear();
@@ -1139,7 +1139,7 @@ class RandomGraph
             G4.eliminateIsolated();
             G4.currentReliability*=(1-p1)*p2*p3;
             if(G4.isConnected()==1){
-                G4.eliminateLists();
+                G4.eliminateLeafs();
                 UB-=G4.currentReliability*(1-product(G4.multipliers));
                 G4.currentReliability*=product(G4.multipliers);
                 G4.multipliers.clear();
@@ -1183,7 +1183,7 @@ class RandomGraph
             UB-=G5.currentReliability*(1-p1)*(1-p2)*(1-p3);
             G5.currentReliability*=(1-p1)*(1-p2)*p3+(1-p1)*p2*(1-p3)+p1*(1-p2)*(1-p3);
             if(G5.isConnected()==1){
-                G5.eliminateLists();
+                G5.eliminateLeafs();
                 UB-=G5.currentReliability*(1-product(G5.multipliers));
                 G5.currentReliability*=product(G5.multipliers);
                 G5.multipliers.clear();
@@ -1306,7 +1306,7 @@ class RandomGraph
         int *used;
         multipliers.clear();
         if(level==0){
-            eliminateLists();
+            eliminateLeafs();
             eliminateChains();
         }
         prod=product(multipliers);
@@ -1317,10 +1317,10 @@ class RandomGraph
             RandomGraph G1(*this),G2(*this);
             G1.contractVertices(G1.edges[0].in,G1.edges[0].out);
             G1.eliminateIsolated();
-            G1.eliminateLists();
+            G1.eliminateLeafs();
             G1.eliminateChains();
             p=G2.eliminateEdge(G2.edges[0].in,G2.edges[0].out);
-            G2.eliminateLists();
+            G2.eliminateLeafs();
             G2.eliminateChains();
             for(int i=0;i<G2.dimension;i++) if(G2.degree[i]==0) return prod*product(G1.multipliers)*p*G1.doRMS();
             used=new int[G2.dimension];
@@ -1394,10 +1394,10 @@ int main(){
     st_time = clock();
     G2.doTDFCB(0);
     end_time = clock();
-    if(counter>10000) cout << endl << "after whole process:" << endl;
+    if(counter>10000) cout << endl << "After a whole process:" << endl;
     cout << "UB " << UB << endl << "LB " << LB;
     cout << " time " << (long double)(end_time-start_time)/CLK_TCK << endl;
-    cout << "taken iterations at all: " << counter << endl;
+    cout << "Taken iterations at all: " << counter << endl;
     cout << "=====================================" << endl;
 
     return 0;
